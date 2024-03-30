@@ -1,5 +1,5 @@
 # (Unofficial) List of Research Papers from ICS-UPLB
-(endorsed by the ICS Research Division)
+(co-maintained with the ICS Research Division)
 
 https://srg-ics-uplb.github.io/ics-research-papers/
 
