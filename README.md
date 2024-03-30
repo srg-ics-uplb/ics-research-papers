@@ -3,7 +3,7 @@
 
 https://srg-ics-uplb.github.io/ics-research-papers/
 
-This is to complement the list created by Assoc. Prof. Jaime Samaniego.
+This is to complement the internal document created by Assoc. Prof. Jaime Samaniego.
 ChatGPT-3.5 was used to convert to bibtex (there may be errors). 
 There are two ways to add or update entries in this list.
 
