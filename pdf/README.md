@@ -1,0 +1,1 @@
+Create a new folder for the year if it does not exist yet.
