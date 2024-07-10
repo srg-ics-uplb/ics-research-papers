@@ -17,9 +17,11 @@ do
    sed -i 's/<\/em>/<\/b>/g' $year.html  
    mv $year.html $outdir/
    cd $outdir 
-   ls -r *.html | xargs cat > index.html
+   ls -r *.html | xargs cat > body.html
    cd ..
-   cp html/index.html .
+   echo "<html><head><link rel=stylesheet type="text/css" href="style.css"></head><body>" > index.html
+   cat html/body.html >> index.html
+   echo "</body></html>" >> index.html
 done
 
 #bibtex2html --revkeys -d -r -t "UPLB Institute of Computer Science Publications" -css style.css index.bib
