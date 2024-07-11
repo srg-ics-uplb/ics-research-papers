@@ -3,7 +3,7 @@
 
 outdir=html
 
-for f in years/*.bib
+for f in bib/*.bib
 do
    echo $f
    filename=$(basename -- "$f")
