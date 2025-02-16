@@ -1,4 +1,6 @@
 *.bbl
 *.aux
 *.blg
+*.out
+*.log
 bib2html*
