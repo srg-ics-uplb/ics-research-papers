@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage{url}
+\usepackage{databib}
+\usepackage{hyperref}
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
+\begin{document}
+
+\title{List of Publications}
+
+
+\author{
+Institute of Computer Science 
+}
+
+\maketitle
+\nocite{*}
+\DTLloadbbl{mybibdata}{ics-publications}
+\DTLsort{Year=descending,Month=descending}{mybibdata}
+\DTLbibliography{mybibdata}
+%\bibliographystyle{abbrv}
+%\bibliography{srg-publications}
+\end{document}
