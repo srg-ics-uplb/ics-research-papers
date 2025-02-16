@@ -22,7 +22,7 @@ do
    cd ..
 done
 
-echo "<html><head><link rel=stylesheet type="text/css" href="style.css"></head><body><h1>UPLB Institute of Computer Science Research Publications</h1>" > index.html
+echo "<html><head><link rel=stylesheet type="text/css" href="style.css"></head><body><h1>UPLB Institute of Computer Science Research Publications</h1><h3><a href="./ics-publications.pdf">PDF</a></h3>" > index.html
 cat html/body.html >> index.html
 echo "</body></html>" >> index.html
 
