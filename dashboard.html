@@ -9,25 +9,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F4F3F0;
+    --bg:#EFEFED;
     --surface:#FFFFFF;
-    --ink:#1B1A19;
-    --muted:#6B645E;
-    --faint:#9A938B;
-    --line:#E3DFDA;
-    --line-soft:#EEEBE6;
-    --maroon:#7B1113;       /* UP Maroon — primary */
-    --maroon-2:#9E2B2B;     /* lighter maroon for hovers/links */
-    --maroon-soft:#F2E2E1;  /* maroon tint for backgrounds */
-    --green:#014421;        /* UP Forest Green — complementary */
-    --green-2:#1C6B3C;
-    --green-soft:#E1EDE5;
-    --gold:#B07D16;         /* gold — accent only */
-    --gold-soft:#F4EAD2;
+    --ink:#1E211F;
+    --muted:#5C615E;
+    --faint:#8C918D;
+    --line:#E0E0DD;
+    --line-soft:#ECECEA;
+    --maroon:#8E1B33;       /* maroon — section titles, primary actions, square bullets */
+    --maroon-2:#A8324C;     /* lighter maroon for hovers */
+    --maroon-soft:#F3E3E6;  /* maroon tint for backgrounds */
+    --green:#146B54;        /* teal forest green — subheadings, type tags, chart */
+    --green-2:#0E5743;
+    --green-soft:#E0EDE8;
+    --link:#2E7DC4;         /* blue — inline links, in the site's "Read more" style */
+    --link-soft:#E7F1F9;
     --display:'Fraunces',Georgia,'Times New Roman',serif;
     --sans:'Hanken Grotesk',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
     --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
-    --shadow:0 1px 2px rgba(27,26,25,.05),0 6px 22px rgba(27,26,25,.06);
+    --shadow:0 1px 2px rgba(20,22,21,.05),0 6px 22px rgba(20,22,21,.07);
     --radius:14px;
   }
   *{box-sizing:border-box}
@@ -83,26 +83,33 @@
   .iconbtn:hover{border-color:var(--maroon-2);color:var(--ink)}
 
   /* ---------- hero ---------- */
-  .hero{padding:42px 0 26px}
+  .hero{
+    position:relative;overflow:hidden;
+    padding:50px 0 40px;
+    background:
+      radial-gradient(120% 85% at 88% 120%, rgba(11,40,29,.55), transparent 58%),
+      radial-gradient(90% 70% at 12% -20%, rgba(255,255,255,.10), transparent 60%),
+      linear-gradient(150deg,#6F8E80 0%,#4C7264 48%,#2E5749 100%);
+  }
   .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:46px;align-items:end}
   .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+    text-transform:uppercase;color:rgba(255,255,255,.82);margin:0 0 14px}
   h1{
     font-family:var(--display);font-weight:500;font-size:clamp(40px,6vw,68px);
     line-height:.98;letter-spacing:-.02em;margin:0 0 18px;
-    font-optical-sizing:auto;
+    font-optical-sizing:auto;color:#fff;
   }
-  .lede{color:var(--muted);font-size:16px;max-width:42ch;margin:0}
-  .lede b{color:var(--ink);font-weight:600}
-  .lede a{color:var(--maroon-2);text-decoration:none;border-bottom:1px solid var(--line)}
-  .lede a:hover{border-color:var(--maroon-2)}
+  .lede{color:rgba(255,255,255,.85);font-size:16px;max-width:42ch;margin:0}
+  .lede b{color:#fff;font-weight:600}
+  .lede a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.5)}
+  .lede a:hover{border-color:#fff}
 
   .stats{display:flex;gap:30px;margin-top:28px;flex-wrap:wrap}
   .stat{display:flex;flex-direction:column;gap:2px}
   .stat .n{font-family:var(--display);font-weight:500;font-size:34px;line-height:1;
-    letter-spacing:-.02em;color:var(--maroon)}
+    letter-spacing:-.02em;color:#fff}
   .stat .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
-    text-transform:uppercase;color:var(--faint)}
+    text-transform:uppercase;color:rgba(255,255,255,.7)}
 
   /* year chart (signature) */
   .chart-card{
@@ -180,7 +187,7 @@
     font-size:12.5px;font-weight:600}
   .pill button{border:none;background:none;color:var(--maroon);font-size:15px;line-height:1;
     padding:0 3px;cursor:pointer}
-  .clearall{border:none;background:none;color:var(--maroon-2);font-weight:600;
+  .clearall{border:none;background:none;color:var(--link);font-weight:600;
     font-size:12.5px;text-decoration:underline;cursor:pointer}
 
   /* ---------- list ---------- */
@@ -199,10 +206,10 @@
   }
   .entry:hover{background:linear-gradient(90deg,rgba(123,17,19,.03),transparent 60%)}
   .e-main{min-width:0}
-  .e-type{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);
+  .e-type{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);
     font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;
-    color:var(--green-2);margin-bottom:7px}
-  .e-type .dot{width:6px;height:6px;border-radius:50%;background:var(--green-2)}
+    color:var(--green);margin-bottom:7px}
+  .e-type .dot{width:9px;height:9px;border-radius:1px;background:var(--maroon)}
   .e-title{font-family:var(--display);font-weight:500;font-size:19px;line-height:1.28;
     letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
   .e-authors{color:var(--muted);font-size:14px;margin:0 0 7px}
@@ -212,9 +219,9 @@
   .e-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
   .e-link{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);
     font-size:11px;font-weight:600;letter-spacing:.03em;text-decoration:none;
-    color:var(--maroon-2);border:1px solid var(--line);border-radius:7px;
+    color:var(--link);border:1px solid var(--line);border-radius:7px;
     padding:5px 9px;background:var(--surface);transition:all .12s ease}
-  .e-link:hover{border-color:var(--maroon-2);background:var(--maroon-soft)}
+  .e-link:hover{border-color:var(--link);background:var(--link-soft)}
   .e-link.copy{color:var(--muted)}
   .e-link.copy.done{color:#1d7a4d;border-color:#bfe3ce;background:#eaf7ef}
 
@@ -237,7 +244,7 @@
 
   /* fallback panel */
   details.fallback{margin-top:8px}
-  details.fallback summary{font-size:13px;color:var(--maroon-2);font-weight:600;
+  details.fallback summary{font-size:13px;color:var(--link);font-weight:600;
     cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
   details.fallback summary::-webkit-details-marker{display:none}
   .fb-body{margin-top:14px;display:flex;flex-direction:column;gap:12px;text-align:left;
