@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Index — Publications Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F3F0;
+    --surface:#FFFFFF;
+    --ink:#1B1A19;
+    --muted:#6B645E;
+    --faint:#9A938B;
+    --line:#E3DFDA;
+    --line-soft:#EEEBE6;
+    --maroon:#7B1113;       /* UP Maroon — primary */
+    --maroon-2:#9E2B2B;     /* lighter maroon for hovers/links */
+    --maroon-soft:#F2E2E1;  /* maroon tint for backgrounds */
+    --green:#014421;        /* UP Forest Green — complementary */
+    --green-2:#1C6B3C;
+    --green-soft:#E1EDE5;
+    --gold:#B07D16;         /* gold — accent only */
+    --gold-soft:#F4EAD2;
+    --display:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --shadow:0 1px 2px rgba(27,26,25,.05),0 6px 22px rgba(27,26,25,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--sans);font-size:15px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* thin UP maroon + forest green bar across the very top */
+  body::before{
+    content:"";display:block;height:4px;
+    background:linear-gradient(90deg,var(--maroon) 0 50%,var(--green) 50% 100%);
+  }
+  a{color:inherit}
+  button{font-family:inherit;cursor:pointer}
+  ::selection{background:var(--maroon-soft)}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:40;
+    background:color-mix(in srgb,var(--bg) 86%,transparent);
+    backdrop-filter:saturate(1.4) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-in{display:flex;align-items:center;gap:18px;padding:13px 0}
+  .mark{display:flex;align-items:center;gap:10px;flex:none}
+  .glyph{
+    width:30px;height:30px;border-radius:8px;flex:none;
+    background:var(--maroon);color:#fff;display:grid;place-items:center;
+    font-family:var(--display);font-weight:600;font-size:18px;line-height:1;
+  }
+  .wordmark{display:flex;flex-direction:column;line-height:1.05}
+  .wordmark b{font-weight:600;letter-spacing:-.01em;font-size:15px}
+  .wordmark span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint)}
+
+  .btn{
+    border:1px solid var(--maroon);background:var(--maroon);color:#fff;
+    border-radius:9px;padding:9px 15px;font-weight:600;font-size:13.5px;
+    white-space:nowrap;transition:filter .15s ease;
+  }
+  .btn:hover{filter:brightness(1.12)}
+  .btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+  .btn.ghost:hover{filter:none;border-color:var(--maroon-2)}
+  .btn:disabled{opacity:.55;cursor:progress}
+  .iconbtn{
+    border:1px solid var(--line);background:var(--surface);border-radius:9px;
+    padding:9px 11px;font-size:13px;color:var(--muted);font-weight:600;flex:none;
+  }
+  .iconbtn:hover{border-color:var(--maroon-2);color:var(--ink)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:42px 0 26px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:46px;align-items:end}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+  h1{
+    font-family:var(--display);font-weight:500;font-size:clamp(40px,6vw,68px);
+    line-height:.98;letter-spacing:-.02em;margin:0 0 18px;
+    font-optical-sizing:auto;
+  }
+  .lede{color:var(--muted);font-size:16px;max-width:42ch;margin:0}
+  .lede b{color:var(--ink);font-weight:600}
+  .lede a{color:var(--maroon-2);text-decoration:none;border-bottom:1px solid var(--line)}
+  .lede a:hover{border-color:var(--maroon-2)}
+
+  .stats{display:flex;gap:30px;margin-top:28px;flex-wrap:wrap}
+  .stat{display:flex;flex-direction:column;gap:2px}
+  .stat .n{font-family:var(--display);font-weight:500;font-size:34px;line-height:1;
+    letter-spacing:-.02em;color:var(--maroon)}
+  .stat .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--faint)}
+
+  /* year chart (signature) */
+  .chart-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px 14px;box-shadow:var(--shadow);
+  }
+  .chart-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+  .chart-head h2{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin:0;font-weight:600}
+  .chart-head .hint{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .bars{display:flex;align-items:flex-end;gap:5px;height:128px}
+  .bar{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;
+    height:100%;justify-content:flex-end;background:none;border:none;padding:0;
+    min-width:0;
+  }
+  .bar .col{
+    width:100%;max-width:30px;border-radius:5px 5px 2px 2px;
+    background:var(--green-soft);position:relative;transition:background .15s ease;
+    min-height:3px;
+  }
+  .bar .col::before{
+    content:attr(data-n);position:absolute;top:-17px;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:10px;color:var(--muted);opacity:0;transition:opacity .15s ease;
+  }
+  .bar .yr{font-family:var(--mono);font-size:10px;color:var(--faint);
+    writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:.04em}
+  .bar:hover .col,.bar:focus-visible .col{background:var(--green-2)}
+  .bar:hover .col::before,.bar:focus-visible .col::before{opacity:1}
+  .bar.active .col{background:var(--maroon)}
+  .bar.active .col::before{opacity:1;color:var(--maroon)}
+  .bar.active .yr{color:var(--maroon)}
+  .bar:focus-visible{outline:2px solid var(--maroon-2);outline-offset:3px;border-radius:4px}
+
+  /* ---------- controls ---------- */
+  .controls{
+    position:sticky;top:57px;z-index:30;
+    background:color-mix(in srgb,var(--bg) 90%,transparent);
+    backdrop-filter:blur(8px);
+    padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    margin-bottom:8px;
+  }
+  .controls-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .search{position:relative;flex:1;min-width:220px}
+  .search input{
+    width:100%;border:1px solid var(--line);background:var(--surface);border-radius:10px;
+    padding:11px 14px 11px 38px;font-size:14px;color:var(--ink);outline:none;font-family:var(--sans);
+  }
+  .search input:focus-visible{border-color:var(--maroon-2);box-shadow:0 0 0 3px var(--maroon-soft)}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint)}
+
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{
+    border:1px solid var(--line);background:var(--surface);color:var(--muted);
+    border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:600;
+    display:inline-flex;align-items:center;gap:7px;transition:all .12s ease;
+  }
+  .chip .c{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .chip:hover{border-color:var(--maroon-2);color:var(--ink)}
+  .chip.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+  .chip.on .c{color:rgba(255,255,255,.7)}
+
+  select.sort{
+    border:1px solid var(--line);background:var(--surface);border-radius:10px;
+    padding:10px 13px;font-size:13px;font-weight:600;color:var(--ink);font-family:var(--sans);
+    outline:none;
+  }
+  select.sort:focus-visible{border-color:var(--maroon-2);box-shadow:0 0 0 3px var(--maroon-soft)}
+
+  /* active filter pill */
+  .activebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:2px 0 4px;min-height:20px;font-size:13px;color:var(--muted)}
+  .pill{display:inline-flex;align-items:center;gap:7px;background:var(--maroon-soft);
+    color:var(--maroon);border:1px solid #E4BFBE;border-radius:999px;padding:4px 6px 4px 11px;
+    font-size:12.5px;font-weight:600}
+  .pill button{border:none;background:none;color:var(--maroon);font-size:15px;line-height:1;
+    padding:0 3px;cursor:pointer}
+  .clearall{border:none;background:none;color:var(--maroon-2);font-weight:600;
+    font-size:12.5px;text-decoration:underline;cursor:pointer}
+
+  /* ---------- list ---------- */
+  main{padding:6px 0 60px}
+  .yeargroup{margin-top:18px}
+  .yearhead{display:flex;align-items:baseline;gap:14px;padding:10px 0 4px;
+    border-bottom:1px solid var(--line);margin-bottom:8px}
+  .yearhead .y{font-family:var(--display);font-weight:500;font-size:30px;color:var(--maroon);
+    letter-spacing:-.02em;line-height:1}
+  .yearhead .c{font-family:var(--mono);font-size:11px;color:var(--faint);
+    letter-spacing:.05em}
+
+  .entry{
+    display:grid;grid-template-columns:1fr auto;gap:8px 22px;
+    padding:18px 2px;border-bottom:1px solid var(--line-soft);
+  }
+  .entry:hover{background:linear-gradient(90deg,rgba(123,17,19,.03),transparent 60%)}
+  .e-main{min-width:0}
+  .e-type{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);
+    font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;
+    color:var(--green-2);margin-bottom:7px}
+  .e-type .dot{width:6px;height:6px;border-radius:50%;background:var(--green-2)}
+  .e-title{font-family:var(--display);font-weight:500;font-size:19px;line-height:1.28;
+    letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
+  .e-authors{color:var(--muted);font-size:14px;margin:0 0 7px}
+  .e-authors .me{color:var(--ink)}
+  .e-venue{font-size:13px;color:var(--faint);margin:0;font-style:italic}
+  .e-venue em{font-style:normal;color:var(--muted)}
+  .e-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+  .e-link{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);
+    font-size:11px;font-weight:600;letter-spacing:.03em;text-decoration:none;
+    color:var(--maroon-2);border:1px solid var(--line);border-radius:7px;
+    padding:5px 9px;background:var(--surface);transition:all .12s ease}
+  .e-link:hover{border-color:var(--maroon-2);background:var(--maroon-soft)}
+  .e-link.copy{color:var(--muted)}
+  .e-link.copy.done{color:#1d7a4d;border-color:#bfe3ce;background:#eaf7ef}
+
+  .e-side{display:flex;flex-direction:column;align-items:flex-end;gap:4px;text-align:right}
+  .e-key{font-family:var(--mono);font-size:10.5px;color:var(--faint);
+    word-break:break-all;max-width:200px}
+
+  /* states */
+  .state{text-align:center;padding:70px 20px;max-width:560px;margin:0 auto}
+  .state .ic{width:46px;height:46px;border-radius:12px;background:var(--maroon-soft);
+    color:var(--maroon);display:grid;place-items:center;margin:0 auto 18px;font-size:22px}
+  .state h3{font-family:var(--display);font-weight:500;font-size:24px;margin:0 0 10px}
+  .state p{color:var(--muted);margin:0 auto 20px;max-width:42ch}
+  .state.error .ic{background:var(--maroon-soft);color:var(--maroon)}
+  .state .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+  .spinner{width:34px;height:34px;border-radius:50%;border:3px solid var(--maroon-soft);
+    border-top-color:var(--maroon);animation:spin .8s linear infinite;margin:0 auto 20px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* fallback panel */
+  details.fallback{margin-top:8px}
+  details.fallback summary{font-size:13px;color:var(--maroon-2);font-weight:600;
+    cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
+  details.fallback summary::-webkit-details-marker{display:none}
+  .fb-body{margin-top:14px;display:flex;flex-direction:column;gap:12px;text-align:left;
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .fb-body label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--faint)}
+  .fb-body textarea{width:100%;min-height:120px;font-family:var(--mono);font-size:12px;
+    border:1px solid var(--line);border-radius:9px;padding:11px;resize:vertical;outline:none}
+  .fb-body textarea:focus-visible{border-color:var(--maroon-2);box-shadow:0 0 0 3px var(--maroon-soft)}
+  .fb-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+  footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);
+    font-size:12.5px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  footer .mono{font-family:var(--mono);font-size:11px}
+
+  .hidden{display:none !important}
+
+  @media (max-width:840px){
+    .hero-grid{grid-template-columns:1fr;gap:30px}
+    .source{order:3;max-width:none;flex-basis:100%;margin-left:0}
+    .topbar-in{flex-wrap:wrap}
+    .controls{top:0;position:static}
+  }
+  @media (max-width:560px){
+    .entry{grid-template-columns:1fr}
+    .e-side{flex-direction:row;align-items:center;justify-content:flex-start;
+      text-align:left;flex-wrap:wrap}
+    .e-key{max-width:none}
+    .stats{gap:22px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <div class="mark">
+      <div class="glyph">¶</div>
+      <div class="wordmark"><b>Research Index</b><span>Publications</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== dashboard (hidden until loaded) ===== -->
+<section class="hero hidden" id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Bibliographic dashboard</p>
+      <h1>Research<br>Publications</h1>
+      <p class="lede" id="lede"></p>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <h2>Output by year</h2>
+        <span class="hint">click a year to filter</span>
+      </div>
+      <div class="bars" id="bars"></div>
+    </div>
+  </div>
+</section>
+
+<div class="controls hidden" id="controls">
+  <div class="wrap controls-in">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Search titles, authors, venues…">
+    </div>
+    <div class="chips" id="typechips"></div>
+    <select class="sort" id="sort" aria-label="Sort publications">
+      <option value="year-desc">Newest first</option>
+      <option value="year-asc">Oldest first</option>
+      <option value="title">Title A–Z</option>
+      <option value="type">By type</option>
+    </select>
+  </div>
+  <div class="wrap"><div class="activebar" id="activebar"></div></div>
+</div>
+
+<!-- status / empty / error -->
+<section class="wrap" id="status"></section>
+
+<main class="wrap" id="list"></main>
+
+<footer class="wrap hidden" id="footer">
+  <span id="footcount" class="mono"></span>
+  <span class="mono">Parsed client-side from BibTeX · Research Index</span>
+</footer>
+
+<script>
+"use strict";
+
+/* ============================================================
+   CONFIGURATION
+   Set the BibTeX source URL here. It is read from the source
+   code only and is never shown in the interface.
+   ============================================================ */
+const SOURCE_URL = "https://srg-ics-uplb.github.io/ics-research-papers/ics-publications.bib";
+
+
+/* ============================================================
+   SMALL HELPERS
+   ============================================================ */
+
+// Short name for document.getElementById.
+function byId(id) {
+  return document.getElementById(id);
+}
+
+// Make text safe to drop inside HTML (turns < into &lt;, etc.).
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+
+/* ============================================================
+   1. BIBTEX PARSER
+   Reads raw .bib text and returns a list of entries shaped like:
+     { type: "article", key: "smith2020", fields: { title: "...", year: "2020" } }
+   It walks the text one character at a time using a moving cursor (`index`).
+   ============================================================ */
+function parseBibtex(text) {
+  const entries = [];
+  const stringDefinitions = {};   // remembers @string abbreviations
+  let index = 0;                  // current position in the text
+
+  function isWhitespace(character) {
+    return character === " " || character === "\t" ||
+           character === "\n" || character === "\r";
+  }
+
+  function skipWhitespace() {
+    while (index < text.length && isWhitespace(text[index])) {
+      index++;
+    }
+  }
+
+  // Read text inside { ... }, keeping nested braces balanced.
+  // The outermost pair of braces is dropped; inner ones are kept.
+  function readBracedValue() {
+    let depth = 0;
+    let value = "";
+    while (index < text.length) {
+      const character = text[index];
+      if (character === "{") {
+        depth++;
+        if (depth > 1) value += character;
+      } else if (character === "}") {
+        depth--;
+        if (depth === 0) { index++; break; }
+        value += character;
+      } else {
+        value += character;
+      }
+      index++;
+    }
+    return value;
+  }
+
+  // Read text inside " ... ".
+  function readQuotedValue() {
+    index++; // skip the opening quote
+    let value = "";
+    let depth = 0;
+    while (index < text.length) {
+      const character = text[index];
+      if (character === '"' && depth === 0) {
+        index++; // skip the closing quote
+        break;
+      }
+      if (character === "{") depth++;
+      if (character === "}") depth = Math.max(0, depth - 1);
+      value += character;
+      index++;
+    }
+    return value;
+  }
+
+  // A field value can be {braced}, "quoted", a number, or a @string name.
+  // Pieces joined by "#" are concatenated, e.g.  title = "A" # "B".
+  function readValue() {
+    const pieces = [];
+    while (true) {
+      skipWhitespace();
+      const character = text[index];
+
+      if (character === "{") {
+        pieces.push(readBracedValue());
+      } else if (character === '"') {
+        pieces.push(readQuotedValue());
+      } else if (character >= "0" && character <= "9") {
+        let number = "";
+        while (index < text.length && text[index] >= "0" && text[index] <= "9") {
+          number += text[index];
+          index++;
+        }
+        pieces.push(number);
+      } else if (/[a-zA-Z]/.test(character || "")) {
+        let name = "";
+        while (index < text.length && /[a-zA-Z0-9_]/.test(text[index])) {
+          name += text[index];
+          index++;
+        }
+        const known = stringDefinitions[name.toLowerCase()];
+        pieces.push(known !== undefined ? known : name);
+      } else {
+        break;
+      }
+
+      skipWhitespace();
+      if (text[index] === "#") {
+        index++; // there is another piece to read
+      } else {
+        break;
+      }
+    }
+    return pieces.join("");
+  }
+
+  // Skip a balanced block, used for @comment{...} and @preamble{...}.
+  function skipBalanced(openBrace, closeBrace) {
+    let depth = 1;
+    while (index < text.length && depth > 0) {
+      if (text[index] === openBrace) depth++;
+      else if (text[index] === closeBrace) depth--;
+      index++;
+    }
+  }
+
+  // Read one entry that begins at the current "@".
+  function readEntry() {
+    index++; // skip "@"
+
+    let type = "";
+    while (index < text.length && /[a-zA-Z]/.test(text[index])) {
+      type += text[index];
+      index++;
+    }
+    type = type.toLowerCase();
+
+    skipWhitespace();
+    const openBrace = text[index];
+    if (openBrace !== "{" && openBrace !== "(") return null;
+    const closeBrace = openBrace === "{" ? "}" : ")";
+    index++;
+
+    // @comment and @preamble are not real entries.
+    if (type === "comment" || type === "preamble") {
+      skipBalanced(openBrace, closeBrace);
+      return null;
+    }
+
+    // @string defines an abbreviation: @string{ name = "value" }.
+    if (type === "string") {
+      skipWhitespace();
+      let name = "";
+      while (index < text.length && text[index] !== "=" && !isWhitespace(text[index])) {
+        name += text[index];
+        index++;
+      }
+      skipWhitespace();
+      if (text[index] === "=") index++;
+      stringDefinitions[name.toLowerCase()] = readValue();
+      skipWhitespace();
+      if (text[index] === closeBrace) index++;
+      return null;
+    }
+
+    // A normal entry: read the citation key, then the field list.
+    skipWhitespace();
+    let key = "";
+    while (index < text.length && text[index] !== "," && text[index] !== closeBrace) {
+      key += text[index];
+      index++;
+    }
+
+    const fields = {};
+    while (index < text.length) {
+      skipWhitespace();
+      if (text[index] === closeBrace) { index++; break; }
+      if (text[index] === ",") { index++; continue; }
+
+      let fieldName = "";
+      while (index < text.length &&
+             text[index] !== "=" && text[index] !== "," &&
+             text[index] !== closeBrace && !isWhitespace(text[index])) {
+        fieldName += text[index];
+        index++;
+      }
+
+      skipWhitespace();
+      if (text[index] !== "=") {            // malformed entry: stop safely
+        if (text[index] === closeBrace) index++;
+        break;
+      }
+      index++; // skip "="
+
+      const value = readValue();
+      if (fieldName) {
+        fields[fieldName.toLowerCase().trim()] = value;
+      }
+    }
+
+    return { type: type, key: key.trim(), fields: fields };
+  }
+
+  // Main loop: jump from one "@" to the next and read each entry.
+  while (index < text.length) {
+    while (index < text.length && text[index] !== "@") {
+      index++;
+    }
+    if (index >= text.length) break;
+
+    const entry = readEntry();
+    if (entry) entries.push(entry);
+  }
+
+  return entries;
+}
+
+
+/* ============================================================
+   2. CLEAN LATEX
+   Converts LaTeX accents and symbols into plain readable text.
+   Examples: "Mar\'{i}a" -> "María",  "Ba\~{n}os" -> "Baños",  "--" -> "–".
+   ============================================================ */
+
+// Accent commands such as \'e  or  \~n  map to a single character.
+const LATEX_ACCENTS = {
+  "\\'a": "á", "\\'e": "é", "\\'i": "í", "\\'o": "ó", "\\'u": "ú", "\\'y": "ý",
+  "\\'n": "ń", "\\'c": "ć", "\\'s": "ś", "\\'z": "ź",
+  "\\`a": "à", "\\`e": "è", "\\`i": "ì", "\\`o": "ò", "\\`u": "ù",
+  '\\"a': "ä", '\\"e': "ë", '\\"i': "ï", '\\"o': "ö", '\\"u': "ü", '\\"y': "ÿ",
+  "\\^a": "â", "\\^e": "ê", "\\^i": "î", "\\^o": "ô", "\\^u": "û",
+  "\\~a": "ã", "\\~n": "ñ", "\\~o": "õ",
+  "\\=a": "ā", "\\=e": "ē", "\\=o": "ō", "\\=u": "ū",
+  "\\.z": "ż", "\\.e": "ė",
+  "\\cc": "ç", "\\cs": "ş", "\\vs": "š", "\\vc": "č", "\\vz": "ž",
+  "\\vr": "ř", "\\ve": "ě", "\\vn": "ň", "\\ra": "å",
+};
+
+// Standalone symbols and special letters.
+const LATEX_SYMBOLS = {
+  "\\&": "&", "\\%": "%", "\\$": "$", "\\#": "#", "\\_": "_",
+  "\\{": "{", "\\}": "}", "\\o": "ø", "\\O": "Ø", "\\l": "ł", "\\L": "Ł",
+  "\\ss": "ß", "\\ae": "æ", "\\AE": "Æ", "\\aa": "å", "\\AA": "Å",
+  "\\textendash": "–", "\\textemdash": "—", "\\ldots": "…", "\\dots": "…",
+};
+
+function cleanLatex(text) {
+  if (!text) return "";
+
+  let result = text.replace(/\s+/g, " ").trim();
+
+  // Accents written as \'e  or  \'{e}.
+  result = result.replace(/\\([`'^"~=.cvuHr])\{?\\?([a-zA-Z])\}?/g, function (match, accent, letter) {
+    const key = "\\" + accent + letter;
+    return LATEX_ACCENTS[key] || letter;
+  });
+
+  // Known symbols and special letters.
+  result = result.replace(/\\(textendash|textemdash|ldots|dots|ss|AE|ae|aa|AA|o|O|l|L|&|%|\$|#|_|\{|\})/g,
+    function (match) {
+      return LATEX_SYMBOLS[match] || match;
+    });
+
+  // Dashes:  ---  ->  em dash,   --  ->  en dash.
+  result = result.replace(/---/g, "—").replace(/--/g, "–");
+
+  // Drop anything left over: \commands, grouping braces, and ~ spacing.
+  result = result.replace(/\\[a-zA-Z]+\s?/g, "");
+  result = result.replace(/[{}]/g, "");
+  result = result.replace(/~/g, " ").replace(/\\/g, "");
+
+  return result.replace(/\s+/g, " ").trim();
+}
+
+
+/* ============================================================
+   3. TURN A RAW ENTRY INTO A TIDY PUBLICATION
+   ============================================================ */
+
+// Map BibTeX entry types to friendly labels shown in the UI.
+const TYPE_LABELS = {
+  article: "Journal", inproceedings: "Conference", conference: "Conference",
+  book: "Book", inbook: "Book chapter", incollection: "Book chapter",
+  phdthesis: "PhD thesis", mastersthesis: "Master's thesis", thesis: "Thesis",
+  techreport: "Tech report", proceedings: "Proceedings", booklet: "Booklet",
+  manual: "Manual", misc: "Misc", unpublished: "Unpublished", online: "Online",
+  patent: "Patent", dataset: "Dataset",
+};
+
+// Split an author string ("A and B and C") into a list of clean names.
+function splitAuthors(rawAuthors) {
+  if (!rawAuthors) return [];
+
+  const names = [];
+  for (const rawName of rawAuthors.split(/\s+and\s+/i)) {
+    const name = rawName.trim();
+
+    if (name.toLowerCase() === "others") {
+      names.push("et al.");
+    } else if (name.includes(",")) {
+      // "Last, First"  ->  "First Last"
+      const parts = name.split(",");
+      const last = parts[0].trim();
+      const first = parts.slice(1).join(",").trim();
+      names.push(cleanLatex(first + " " + last).trim());
+    } else {
+      names.push(cleanLatex(name));
+    }
+  }
+  return names.filter(function (name) { return name.length > 0; });
+}
+
+// Find the first 4-digit year among the given values.
+function findYear(year, date) {
+  for (const value of [year, date]) {
+    const match = (value || "").match(/\d{4}/);
+    if (match) return Number(match[0]);
+  }
+  return null;
+}
+
+function toPublication(entry) {
+  const fields = entry.fields;
+
+  // Read a field and clean its LaTeX. Returns "" if missing.
+  function field(name) {
+    return fields[name] ? cleanLatex(fields[name]) : "";
+  }
+
+  const authors = splitAuthors(fields.author || fields.editor || "");
+  const year = findYear(fields.year, fields.date);
+
+  // Venue is the first of these fields that exists.
+  const venue = field("journal") || field("booktitle") || field("publisher") ||
+                field("school") || field("institution") || field("organization") ||
+                field("howpublished") || "";
+
+  const typeLabel = TYPE_LABELS[entry.type] ||
+                    (entry.type.charAt(0).toUpperCase() + entry.type.slice(1));
+
+  // DOI without the "https://doi.org/" prefix.
+  const doi = (fields.doi || "").replace(/^https?:\/\/(dx\.)?doi\.org\//i, "").trim();
+
+  // Prefer an explicit url; otherwise build an arXiv link if possible.
+  let url = (fields.url || "").trim();
+  const isArxiv = /arxiv/i.test(fields.archiveprefix || fields.eprinttype || "");
+  if (!url && fields.eprint && isArxiv) {
+    url = "https://arxiv.org/abs/" + fields.eprint.trim();
+  }
+
+  // All the text we let the search box match against.
+  const searchText = [field("title"), authors.join(" "), venue, entry.key, typeLabel, year]
+    .join(" ")
+    .toLowerCase();
+
+  return {
+    id: entry.key || ("entry-" + Math.random().toString(36).slice(2)),
+    type: entry.type,
+    typeLabel: typeLabel,
+    title: field("title") || "(untitled)",
+    authors: authors,
+    year: year,
+    venue: venue,
+    volume: field("volume"),
+    number: field("number"),
+    pages: field("pages"),
+    doi: doi,
+    url: url,
+    rawEntry: entry,
+    searchText: searchText,
+  };
+}
+
+// Rebuild a simple BibTeX string (used by the "copy" button).
+function toBibtex(entry) {
+  const lines = ["@" + entry.type + "{" + entry.key + ","];
+  for (const fieldName in entry.fields) {
+    lines.push("  " + fieldName + " = {" + entry.fields[fieldName] + "},");
+  }
+  lines.push("}");
+  return lines.join("\n");
+}
+
+
+/* ============================================================
+   4. APPLICATION STATE
+   One object holds everything the UI needs. Event handlers change
+   these values and then call render() to redraw the page.
+   ============================================================ */
+const state = {
+  publications: [],       // all loaded publications
+  search: "",             // text typed in the search box
+  activeTypes: [],         // selected type labels (empty = show all)
+  activeYear: null,       // selected year, or null for all years
+  sortBy: "year-desc",    // current sort option
+};
+
+
+/* ============================================================
+   5. FILTERING, SORTING, AND COUNTING (pure functions)
+   ============================================================ */
+
+// Apply the current search, type, and year filters, then sort.
+function getVisiblePublications() {
+  const matches = state.publications.filter(function (publication) {
+    if (state.activeYear !== null && publication.year !== state.activeYear) return false;
+    if (state.activeTypes.length > 0 && !state.activeTypes.includes(publication.typeLabel)) return false;
+    if (state.search && !publication.searchText.includes(state.search.toLowerCase())) return false;
+    return true;
+  });
+
+  matches.sort(function (a, b) {
+    if (state.sortBy === "title") return a.title.localeCompare(b.title);
+    if (state.sortBy === "type") {
+      return a.typeLabel.localeCompare(b.typeLabel) || (b.year || 0) - (a.year || 0);
+    }
+    const difference = (b.year || 0) - (a.year || 0);   // newest first
+    return state.sortBy === "year-asc" ? -difference : difference;
+  });
+
+  return matches;
+}
+
+// Count how many publications fall in each year: { 2020: 3, 2021: 5 }.
+function countByYear() {
+  const counts = {};
+  for (const publication of state.publications) {
+    if (publication.year) {
+      counts[publication.year] = (counts[publication.year] || 0) + 1;
+    }
+  }
+  return counts;
+}
+
+// Count how many publications fall under each type label.
+function countByType() {
+  const counts = {};
+  for (const publication of state.publications) {
+    counts[publication.typeLabel] = (counts[publication.typeLabel] || 0) + 1;
+  }
+  return counts;
+}
+
+// Count distinct author names (ignoring "et al.").
+function countAuthors() {
+  const names = new Set();
+  for (const publication of state.publications) {
+    for (const author of publication.authors) {
+      if (author !== "et al.") names.add(author.toLowerCase());
+    }
+  }
+  return names.size;
+}
+
+// Return { first, last } years, or null if no years are known.
+function getYearRange() {
+  const years = Object.keys(countByYear()).map(Number);
+  if (years.length === 0) return null;
+  return { first: Math.min(...years), last: Math.max(...years) };
+}
+
+
+/* ============================================================
+   6. RENDERING
+   render() redraws the whole dashboard from the current state.
+   Each helper draws one part of the page.
+   ============================================================ */
+function render() {
+  renderStats();
+  renderYearChart();
+  renderTypeFilters();
+  renderActiveFilters();
+  renderList();
+}
+
+function renderStats() {
+  const total = state.publications.length;
+  const range = getYearRange();
+  const yearsActive = range ? range.last - range.first + 1 : "—";
+
+  const stats = [
+    [total, "Publications"],
+    [countAuthors(), "Distinct authors"],
+    [Object.keys(countByType()).length, "Types"],
+    [yearsActive, "Years active"],
+  ];
+
+  byId("stats").innerHTML = stats.map(function (stat) {
+    return '<div class="stat"><span class="n">' + stat[0] +
+           '</span><span class="l">' + stat[1] + "</span></div>";
+  }).join("");
+
+  let lede = "Browsing <b>" + total + "</b> publication" + (total === 1 ? "" : "s");
+  if (range) {
+    lede += " spanning <b>" + range.first + "&ndash;" + range.last + "</b>";
+  }
+  byId("lede").innerHTML = lede + ".";
+}
+
+function renderYearChart() {
+  const counts = countByYear();
+  const range = getYearRange();
+  if (!range) { byId("bars").innerHTML = ""; return; }
+
+  // The tallest bar represents the busiest year.
+  let maxCount = 1;
+  for (const year in counts) {
+    if (counts[year] > maxCount) maxCount = counts[year];
+  }
+
+  // Draw one bar per year, including empty years inside the range.
+  let html = "";
+  for (let year = range.first; year <= range.last; year++) {
+    const count = counts[year] || 0;
+    const heightPercent = Math.round((count / maxCount) * 100);
+    const activeClass = state.activeYear === year ? " active" : "";
+    html +=
+      '<button class="bar' + activeClass + '" data-year="' + year + '" ' +
+              'aria-label="' + year + ", " + count + ' publications">' +
+        '<span class="col" data-n="' + count + '" style="height:' +
+            Math.max(heightPercent, count > 0 ? 6 : 2) + '%"></span>' +
+        '<span class="yr">' + year + "</span>" +
+      "</button>";
+  }
+  byId("bars").innerHTML = html;
+
+  // Clicking a bar filters by that year (click again to clear).
+  byId("bars").querySelectorAll(".bar").forEach(function (bar) {
+    bar.onclick = function () {
+      const year = Number(bar.dataset.year);
+      state.activeYear = (state.activeYear === year) ? null : year;
+      render();
+    };
+  });
+}
+
+function renderTypeFilters() {
+  const counts = countByType();
+  const types = Object.keys(counts).sort(function (a, b) {
+    return counts[b] - counts[a];   // most common type first
+  });
+
+  byId("typechips").innerHTML = types.map(function (type) {
+    const activeClass = state.activeTypes.includes(type) ? " on" : "";
+    return '<button class="chip' + activeClass + '" data-type="' + escapeHtml(type) + '">' +
+           escapeHtml(type) + ' <span class="c">' + counts[type] + "</span></button>";
+  }).join("");
+
+  byId("typechips").querySelectorAll(".chip").forEach(function (chip) {
+    chip.onclick = function () {
+      toggleType(chip.dataset.type);
+      render();
+    };
+  });
+}
+
+// Add or remove a type from the active filters.
+function toggleType(type) {
+  if (state.activeTypes.includes(type)) {
+    state.activeTypes = state.activeTypes.filter(function (t) { return t !== type; });
+  } else {
+    state.activeTypes.push(type);
+  }
+}
+
+function renderActiveFilters() {
+  // Build a list of active filters. Each one knows how to clear itself.
+  const filters = [];
+
+  if (state.activeYear !== null) {
+    filters.push({
+      label: "Year", value: state.activeYear,
+      clear: function () { state.activeYear = null; },
+    });
+  }
+  for (const type of state.activeTypes) {
+    filters.push({
+      label: "Type", value: type,
+      clear: function () { toggleType(type); },
+    });
+  }
+  if (state.search) {
+    filters.push({
+      label: "Search", value: '“' + state.search + '”',
+      clear: function () { state.search = ""; byId("search").value = ""; },
+    });
+  }
+
+  const bar = byId("activebar");
+  if (filters.length === 0) { bar.innerHTML = ""; return; }
+
+  let html = "<span>Filtered:</span>";
+  for (const filter of filters) {
+    html += '<span class="pill">' + escapeHtml(filter.label) + ": " +
+            escapeHtml(String(filter.value)) +
+            '<button aria-label="Remove filter">×</button></span>';
+  }
+  html += '<button class="clearall">Clear all</button>';
+  bar.innerHTML = html;
+
+  // Each pill's × button clears its own filter.
+  bar.querySelectorAll(".pill button").forEach(function (button, position) {
+    button.onclick = function () {
+      filters[position].clear();
+      render();
+    };
+  });
+  bar.querySelector(".clearall").onclick = clearAllFilters;
+}
+
+function clearAllFilters() {
+  state.activeYear = null;
+  state.activeTypes = [];
+  state.search = "";
+  byId("search").value = "";
+  render();
+}
+
+function renderList() {
+  const publications = getVisiblePublications();
+  byId("footcount").textContent =
+    publications.length + " of " + state.publications.length + " shown";
+
+  if (publications.length === 0) {
+    byId("list").innerHTML =
+      '<div class="state"><div class="ic">∅</div>' +
+      "<h3>No matches</h3><p>No publications match the current filters. " +
+      "Try clearing the search or a type filter.</p></div>";
+    return;
+  }
+
+  // When sorting by year, show entries grouped under a year heading.
+  const groupByYear = (state.sortBy === "year-desc" || state.sortBy === "year-asc");
+
+  let html = "";
+  if (groupByYear) {
+    for (const group of groupByYearValue(publications)) {
+      const itemWord = group.items.length === 1 ? " item" : " items";
+      html +=
+        '<section class="yeargroup"><div class="yearhead">' +
+          '<span class="y">' + group.year + "</span>" +
+          '<span class="c">' + group.items.length + itemWord + "</span>" +
+        "</div>" +
+        group.items.map(publicationHtml).join("") +
+        "</section>";
+    }
+  } else {
+    html = '<section class="yeargroup">' +
+           publications.map(publicationHtml).join("") +
+           "</section>";
+  }
+  byId("list").innerHTML = html;
+
+  // Wire up each "BibTeX" copy button.
+  byId("list").querySelectorAll("[data-copy]").forEach(function (button) {
+    button.onclick = function () { copyBibtex(button); };
+  });
+}
+
+// Group an already-sorted list into [{ year, items }, ...], keeping order.
+function groupByYearValue(publications) {
+  const groups = [];
+  let currentGroup = null;
+  for (const publication of publications) {
+    const year = publication.year || "—";
+    if (!currentGroup || currentGroup.year !== year) {
+      currentGroup = { year: year, items: [] };
+      groups.push(currentGroup);
+    }
+    currentGroup.items.push(publication);
+  }
+  return groups;
+}
+
+// Build the HTML for one publication card.
+function publicationHtml(publication) {
+  const authors = publication.authors.length > 0
+    ? publication.authors.map(escapeHtml).join(", ")
+    : "<em>Unknown authors</em>";
+
+  let venueLine = "";
+  if (publication.venue) {
+    const details = [];
+    if (publication.volume) details.push("vol. " + escapeHtml(publication.volume));
+    if (publication.number) details.push("no. " + escapeHtml(publication.number));
+    if (publication.pages)  details.push("pp. " + escapeHtml(publication.pages));
+    const extra = details.length > 0 ? ' <em>· ' + details.join(", ") + "</em>" : "";
+    venueLine = '<p class="e-venue">' + escapeHtml(publication.venue) + extra + "</p>";
+  }
+
+  const links = [];
+  if (publication.doi) {
+    links.push('<a class="e-link" href="https://doi.org/' + escapeHtml(publication.doi) +
+               '" target="_blank" rel="noopener">DOI ↗</a>');
+  }
+  if (publication.url) {
+    links.push('<a class="e-link" href="' + escapeHtml(publication.url) +
+               '" target="_blank" rel="noopener">Link ↗</a>');
+  }
+  links.push('<button class="e-link copy" data-copy="' + escapeHtml(publication.id) +
+             '"><span>BibTeX</span></button>');
+
+  return (
+    '<article class="entry">' +
+      '<div class="e-main">' +
+        '<div class="e-type"><span class="dot"></span>' + escapeHtml(publication.typeLabel) + "</div>" +
+        '<h3 class="e-title">' + escapeHtml(publication.title) + "</h3>" +
+        '<p class="e-authors">' + authors + "</p>" +
+        venueLine +
+        '<div class="e-links">' + links.join("") + "</div>" +
+      "</div>" +
+      '<div class="e-side"><span class="e-key">' + escapeHtml(publication.id) + "</span></div>" +
+    "</article>"
+  );
+}
+
+// Copy a publication's BibTeX to the clipboard and confirm on the button.
+function copyBibtex(button) {
+  const publication = state.publications.find(function (p) {
+    return p.id === button.dataset.copy;
+  });
+  if (!publication) return;
+
+  navigator.clipboard.writeText(toBibtex(publication.rawEntry)).then(function () {
+    const label = button.querySelector("span");
+    const originalText = label.textContent;
+    button.classList.add("done");
+    label.textContent = "Copied";
+    setTimeout(function () {
+      button.classList.remove("done");
+      label.textContent = originalText;
+    }, 1400);
+  });
+}
+
+
+/* ============================================================
+   7. LOADING THE DATA
+   ============================================================ */
+
+// Show or hide the dashboard sections together.
+function showDashboard(visible) {
+  for (const id of ["hero", "controls", "footer"]) {
+    byId(id).classList.toggle("hidden", !visible);
+  }
+}
+
+// Try the URL directly; if the browser blocks it (CORS), try public proxies.
+async function fetchBibtex(url) {
+  const attempts = [
+    url,
+    "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
+    "https://corsproxy.io/?url=" + encodeURIComponent(url),
+  ];
+
+  for (const attemptUrl of attempts) {
+    try {
+      const response = await fetch(attemptUrl);
+      if (!response.ok) continue;
+      const text = await response.text();
+      if (text.includes("@")) return text;
+    } catch (error) {
+      // Ignore and try the next option.
+    }
+  }
+  throw new Error("Could not fetch the BibTeX file.");
+}
+
+// Parse text, store the publications, and show the dashboard.
+function showPublications(bibtexText) {
+  const publications = parseBibtex(bibtexText).map(toPublication);
+
+  if (publications.length === 0) {
+    byId("status").innerHTML = errorHtml(
+      "No entries found",
+      "The file loaded but no BibTeX entries could be read. " +
+      "Check that the source is a valid <code>.bib</code> file."
+    );
+    return;
+  }
+
+  state.publications = publications;
+  state.search = "";
+  state.activeTypes = [];
+  state.activeYear = null;
+  state.sortBy = byId("sort").value;
+
+  byId("status").innerHTML = "";
+  showDashboard(true);
+  render();
+  byId("hero").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// Fetch the configured source and display it.
+async function loadPublications() {
+  showDashboard(false);
+  byId("status").innerHTML =
+    '<div class="state"><div class="spinner"></div><h3>Loading publications</h3></div>';
+
+  try {
+    const text = await fetchBibtex(SOURCE_URL);
+    showPublications(text);
+  } catch (error) {
+    byId("status").innerHTML = errorHtml(
+      "Couldn’t load publications",
+      "The browser couldn’t fetch the configured source. It may be offline, " +
+      "not a valid <code>.bib</code> file, or blocked by cross-origin (CORS) rules. " +
+      "You can upload a file or paste BibTeX below.",
+      true
+    );
+  }
+}
+
+// Build an error message. With fallback = true, also offer file/paste loading.
+function errorHtml(title, message, withFallback) {
+  return (
+    '<div class="state error"><div class="ic">!</div>' +
+      "<h3>" + escapeHtml(title) + "</h3><p>" + message + "</p>" +
+      '<div class="row"><button class="btn" onclick="loadPublications()">Try again</button></div>' +
+      (withFallback ? fallbackHtml() : "") +
+    "</div>"
+  );
+}
+
+function fallbackHtml() {
+  return (
+    '<details class="fallback" open>' +
+      "<summary>▸ Load from a file or paste BibTeX instead</summary>" +
+      '<div class="fb-body">' +
+        '<div class="fb-row"><label>Upload .bib file</label>' +
+          '<input type="file" id="bibfile" accept=".bib,.bibtex,.txt,text/plain"></div>' +
+        "<label>Or paste BibTeX</label>" +
+        '<textarea id="bibpaste" placeholder="@article{key2024, title={…}, author={…}, year={2024} }"></textarea>' +
+        '<div class="fb-row"><button class="btn" id="parsepaste">Parse pasted text</button></div>' +
+      "</div>" +
+    "</details>"
+  );
+}
+
+
+/* ============================================================
+   8. SET UP THE PAGE
+   ============================================================ */
+
+// Search box: wait 160 ms after the last keypress before filtering.
+let searchTimer;
+byId("search").addEventListener("input", function (event) {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(function () {
+    state.search = event.target.value.trim();
+    render();
+  }, 160);
+});
+
+// Sort dropdown.
+byId("sort").addEventListener("change", function (event) {
+  state.sortBy = event.target.value;
+  render();
+});
+
+// Fallback: a .bib file was chosen.
+document.addEventListener("change", function (event) {
+  if (event.target.id === "bibfile" && event.target.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function () { showPublications(reader.result); };
+    reader.readAsText(event.target.files[0]);
+  }
+});
+
+// Fallback: BibTeX was pasted and the parse button was clicked.
+document.addEventListener("click", function (event) {
+  if (event.target.id === "parsepaste") {
+    const text = byId("bibpaste").value;
+    if (text.trim()) showPublications(text);
+  }
+});
+
+// Load the configured source as soon as the page is ready.
+window.addEventListener("DOMContentLoaded", loadPublications);
+
+</script>
+</body>
+</html>
