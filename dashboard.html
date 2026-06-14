@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Research Index — ICS Publications Dashboard</title>
+<title>Research Index — Publications Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -296,7 +296,7 @@
   <div class="wrap hero-grid">
     <div>
       <p class="eyebrow">Bibliographic dashboard</p>
-      <h1>ICS Research<br>Publications</h1>
+      <h1>Research<br>Publications</h1>
       <p class="lede" id="lede"></p>
       <div class="stats" id="stats"></div>
     </div>
@@ -323,6 +323,7 @@
       <option value="title">Title A–Z</option>
       <option value="type">By type</option>
     </select>
+    <button class="iconbtn" id="copylink" title="Copy a link to this filtered view">Copy link</button>
   </div>
   <div class="wrap"><div class="activebar" id="activebar"></div></div>
 </div>
@@ -817,6 +818,45 @@ function getYearRange() {
   return { first: Math.min(...years), last: Math.max(...years) };
 }
 
+// --- Shareable URLs ---------------------------------------------------------
+// The current filters are stored in the URL hash, e.g.
+//   #y=2023&t=Journal,Conference&q=neural&s=title
+// so a filtered view can be bookmarked or shared as a link.
+
+// Write the current filters into the URL hash.
+function updateUrl() {
+  const parts = [];
+  if (state.activeYear !== null) parts.push("y=" + state.activeYear);
+  if (state.activeTypes.length > 0) parts.push("t=" + encodeURIComponent(state.activeTypes.join(",")));
+  if (state.search) parts.push("q=" + encodeURIComponent(state.search));
+  if (state.sortBy !== "year-desc") parts.push("s=" + encodeURIComponent(state.sortBy));
+
+  const hash = parts.join("&");
+  try {
+    const newUrl = location.pathname + location.search + (hash ? "#" + hash : "");
+    history.replaceState(null, "", newUrl);
+  } catch (error) {
+    // Some sandboxed previews block history updates; ignore.
+  }
+}
+
+// Read filters out of the URL hash and into the state.
+function readFiltersFromUrl() {
+  const hash = location.hash.replace(/^#/, "");
+  if (!hash) return;
+
+  for (const part of hash.split("&")) {
+    const equals = part.indexOf("=");
+    const key = part.slice(0, equals);
+    const value = decodeURIComponent(part.slice(equals + 1) || "");
+
+    if (key === "y") state.activeYear = Number(value) || null;
+    else if (key === "t") state.activeTypes = value ? value.split(",") : [];
+    else if (key === "q") state.search = value;
+    else if (key === "s") state.sortBy = value;
+  }
+}
+
 
 /* ============================================================
    6. RENDERING
@@ -829,6 +869,7 @@ function render() {
   renderTypeFilters();
   renderActiveFilters();
   renderList();
+  updateUrl();          // keep the URL in sync so the view is shareable
 }
 
 function renderStats() {
@@ -1143,6 +1184,11 @@ function showPublications(bibtexText) {
   state.activeYear = null;
   state.sortBy = byId("sort").value;
 
+  // Apply any filters carried in the URL so shared links open the same view.
+  readFiltersFromUrl();
+  byId("search").value = state.search;     // reflect restored filters in the controls
+  byId("sort").value = state.sortBy;
+
   byId("status").innerHTML = "";
   showDashboard(true);
   render();
@@ -1214,6 +1260,16 @@ byId("search").addEventListener("input", function (event) {
 byId("sort").addEventListener("change", function (event) {
   state.sortBy = event.target.value;
   render();
+});
+
+// "Copy link" copies the current URL (with its filters) to the clipboard.
+byId("copylink").addEventListener("click", function () {
+  const button = byId("copylink");
+  navigator.clipboard.writeText(location.href).then(function () {
+    const original = button.textContent;
+    button.textContent = "Copied!";
+    setTimeout(function () { button.textContent = original; }, 1400);
+  });
 });
 
 // Fallback: a .bib file was chosen.
