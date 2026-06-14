@@ -32,7 +32,7 @@ A conference paper is presented at an event and published in that event's procee
 **BibTeX type:** `@inproceedings`
 **Key fields:** `booktitle`, `year`, `pages`, `publisher`
 
-**Note:** IEEE and ACM frequently publish conference proceedings. A paper in *Proc. IEEE Intl. Conf. on …* is a conference paper, not a journal article, even though IEEE published it.
+**Note:** IEEE and ACM frequently publish conference proceedings. A paper in *Proc. IEEE Intl. Conf. on …* is a conference paper, not a journal article, even though IEEE published it. Be sure to check the official `Cite` link (BibTex) of the paper once available online.
 
 ---
 
