@@ -106,7 +106,7 @@ These are short peer-reviewed submissions presented at a conference in a non-tal
 - **Demo papers** — describe a working system or tool
 - **Extended abstracts** — 1–2 page summaries, often for work in progress
 
-These usually appear in the conference proceedings (as `@inproceedings`) but are shorter and held to a different standard than full papers. Use brackets in the title to indicate the type. For example `[Poster]` or `[Demo]` or `[Extended Abstract]`
+These usually appear in the conference proceedings (as `@inproceedings`) but are shorter and held to a different standard than full papers. Use brackets in the title to indicate the type. For example `Title of my Paper [Poster]` 
 
 ---
 
