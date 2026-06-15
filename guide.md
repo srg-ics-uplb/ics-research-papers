@@ -124,6 +124,7 @@ CS increasingly counts research artifacts as first-class scholarly outputs:
 ## 11. Indexing Databases
 
 An **indexing database** is a service that collects, organizes, and makes searchable the metadata (and sometimes full text) of scholarly publications. Being indexed is not the same as being peer-reviewed — it is a separate quality signal about a venue's discoverability and standing.
+
 ### Why indexing matters
 
 Institutions, funding agencies, and promotion committees often require that a publication appear in a recognized index before it counts toward a researcher's record. In the Philippine context, CHED and many universities explicitly refer to Scopus or ISI-indexed journals in their research productivity criteria.
@@ -233,6 +234,73 @@ A **predatory journal or conference** exploits the open-access fee model by coll
 Not every journal outside Scopus or WoS is predatory, and not every indexed journal is trustworthy. New legitimate journals take time to be indexed. Regional journals serving local needs may never seek international indexing but still conduct honest peer review. The key question is always: **is the peer review genuine?**
 
 For students at ICS UPLB, a practical rule of thumb is to check with your adviser before submitting to any venue that arrived via unsolicited email, is not in DBLP (for CS), and charges an APC.
+
+---
+
+## 14. Interdisciplinary and Multidisciplinary Publications
+
+As CS increasingly intersects with other fields — biology, medicine, social science, education, economics, law — researchers need to understand how cross-disciplinary work is published, evaluated, and indexed differently from purely CS output.
+
+### Definitions
+
+**Multidisciplinary** research draws on methods or knowledge from several fields but each discipline contributes relatively independently. A paper might apply a machine learning method to a medical dataset without deeply integrating the two fields' theoretical frameworks.
+
+**Interdisciplinary** research integrates concepts, methods, or theories from two or more fields into a genuinely unified approach — the result could not have been produced within any single discipline alone. Examples include computational biology, human-computer interaction (HCI), and natural language processing applied to linguistics.
+
+**Transdisciplinary** research goes further, involving non-academic stakeholders (government, communities, industry) alongside academics to address real-world problems. Less common in CS publishing but increasingly relevant in applied AI and ICT-for-development work.
+
+### Where interdisciplinary CS work gets published
+
+Depending on the application domain, a CS paper may be submitted to venues outside the traditional CS canon:
+
+| Domain | Example venues |
+|---|---|
+| Bioinformatics / Computational biology | *Bioinformatics* (Oxford), *PLOS Computational Biology*, RECOMB |
+| Health informatics / Medical AI | *Journal of Biomedical Informatics*, AMIA, *npj Digital Medicine* |
+| CS education | *ACM TOCE*, SIGCSE, *Computers & Education* |
+| Human-computer interaction | *ACM CHI*, *IJHCS*, *ACM TOCHI* |
+| Computational social science | *ICWSM*, *Social Networks*, *EPJ Data Science* |
+| Environmental / climate informatics | *Environmental Modelling & Software*, NeurIPS climate workshops |
+| Legal informatics / AI & law | *Artificial Intelligence and Law*, JURIX |
+| ICT for development (ICT4D) | *ICTD*, *Information Technologies & International Development* |
+
+### Publication norms differ across fields
+
+This matters because indexing, peer review standards, authorship conventions, and prestige hierarchies vary significantly between disciplines.
+
+**Authorship order** — In CS, author order is typically meaningful (first author did the most work; last author is often the senior/supervising researcher). In biology and medicine, authorship conventions differ: the last position is the most senior, and middle positions are harder to interpret. A CS researcher publishing in a medical journal should be aware that evaluators from their home department may read author position differently.
+
+**Review timelines** — CS conference review cycles run in weeks to a few months. Journals in medicine, social science, or education often take six months to over a year for a decision. A student targeting a health informatics journal should plan accordingly.
+
+**Prestige signals** — Impact Factor and journal ranking matter more in medicine and social science than in CS, where top conferences can outrank many journals. If a CS researcher publishes in a high-IF medical journal, that may look different to a CS promotion committee than to a medical one.
+
+**Indexing** — A venue indexed in PubMed (medicine) or ERIC (education) but not in DBLP or Scopus may still be a legitimate, respected publication in its own field. The absence from DBLP is not a warning sign for non-CS venues.
+
+### For ICS researchers
+
+Interdisciplinary publishing is actively encouraged but requires deliberate preparation:
+
+- **Choose the right venue for the intended audience.** A paper on AI for rice disease detection could go to a CS venue (algorithm contribution) or an agriculture/bioinformatics venue (application contribution). The framing and emphasis should match.
+- **Understand the home department's counting rules.** CHED and UPLB promotion guidelines may weight publications differently depending on whether the journal is indexed, which index, and in which field. Clarify this with your department before submitting.
+- **Co-authorship with domain experts is normal and expected.** An interdisciplinary paper co-authored with a biologist, physician, or social scientist is stronger, not weaker — but ensure BibTeX records capture all authors correctly.
+- **The BibTeX entry type does not change.** A journal article in a health informatics journal is still `@article`; a paper at a CS education conference is still `@inproceedings`. What changes is the `journal` or `booktitle` field and the indexing database where it appears.
+
+---
+
+
+
+This is the most common point of confusion in CS:
+
+| | Conference Paper | Journal Article |
+|---|---|---|
+| Venue | Event proceedings | Periodic journal |
+| Length | Usually shorter (6–12 pages) | Usually longer (10–30+ pages) |
+| Review | Single-round, fast | Multi-round, can take months/years |
+| BibTeX field | `booktitle` | `journal` |
+| BibTeX type | `@inproceedings` | `@article` |
+| IEEE example | *Proc. IEEE INFOCOM 2023* | *IEEE Transactions on Networking* |
+
+A paper can be **presented at a conference** and **later extended into a journal version** — both are valid, separate publications. Occasionally a conference partners with a journal so accepted papers appear in a special issue; in that case, the BibTeX entry would be `@article` even though the paper was presented at an event.
 
 ---
 
