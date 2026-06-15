@@ -124,7 +124,6 @@ CS increasingly counts research artifacts as first-class scholarly outputs:
 ## 11. Indexing Databases
 
 An **indexing database** is a service that collects, organizes, and makes searchable the metadata (and sometimes full text) of scholarly publications. Being indexed is not the same as being peer-reviewed — it is a separate quality signal about a venue's discoverability and standing.
-Use brackets in the title to indicate the type. For example `Title of my Paper [Poster]`
 ### Why indexing matters
 
 Institutions, funding agencies, and promotion committees often require that a publication appear in a recognized index before it counts toward a researcher's record. In the Philippine context, CHED and many universities explicitly refer to Scopus or ISI-indexed journals in their research productivity criteria.
