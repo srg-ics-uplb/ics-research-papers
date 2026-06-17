@@ -288,22 +288,6 @@ Interdisciplinary publishing is actively encouraged but requires deliberate prep
 ---
 
 
-
-This is the most common point of confusion in CS:
-
-| | Conference Paper | Journal Article |
-|---|---|---|
-| Venue | Event proceedings | Periodic journal |
-| Length | Usually shorter (6–12 pages) | Usually longer (10–30+ pages) |
-| Review | Single-round, fast | Multi-round, can take months/years |
-| BibTeX field | `booktitle` | `journal` |
-| BibTeX type | `@inproceedings` | `@article` |
-| IEEE example | *Proc. IEEE INFOCOM 2023* | *IEEE Transactions on Networking* |
-
-A paper can be **presented at a conference** and **later extended into a journal version** — both are valid, separate publications. Occasionally a conference partners with a journal so accepted papers appear in a special issue; in that case, the BibTeX entry would be `@article` even though the paper was presented at an event.
-
----
-
 ## Conference Paper vs. Journal Article: A Quick Summary
 
 This is the most common point of confusion in CS:
